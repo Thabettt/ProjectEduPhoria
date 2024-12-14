@@ -8,15 +8,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true"/>
+        <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Learners\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Learners\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Learners\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Learners\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Learners\Index.cshtml" />
     </ItemGroup>
 
 </Project>

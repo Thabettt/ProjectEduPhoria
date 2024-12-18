@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,14 @@ namespace MainApp.Controllers
     public class AdminsController : Controller
     {
         private readonly EduPhoriaContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AdminsController(EduPhoriaContext context)
+        public AdminsController(EduPhoriaContext context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: Admins
@@ -60,6 +65,7 @@ namespace MainApp.Controllers
             {
                 _context.Add(admin);
                 await _context.SaveChangesAsync();
+                await AssignAdminRole(admin.Email);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Email"] = new SelectList(_context.Users, "Email", "Email", admin.Email);
@@ -168,6 +174,23 @@ namespace MainApp.Controllers
         {
             var learners = await _context.Learners.ToListAsync();
             return View(learners);
+        }
+
+        private async Task AssignAdminRole(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                if (!await _roleManager.RoleExistsAsync("Admin"))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                }
+
+                if (!await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
         }
     }
 }

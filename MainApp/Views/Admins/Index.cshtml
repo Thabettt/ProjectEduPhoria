@@ -1,4 +1,7 @@
 @model IEnumerable<MainApp.Models.Admin>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
@@ -39,3 +42,27 @@
 }
     </tbody>
 </table>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>User is signed in.</p>
+    @if (User.IsInRole("Admin"))
+    {
+        <p>User is in Admin role.</p>
+        <div class="manage-menu">
+            <h3>Manage</h3>
+            <ul>
+                <li><a href="@Url.Action("ViewInstructors", "Admins")">View Instructors</a></li>
+                <li><a href="@Url.Action("ViewLearners", "Admins")">View Learners</a></li>
+            </ul>
+        </div>
+    }
+    else
+    {
+        <p>User is not in Admin role.</p>
+    }
+}
+else
+{
+    <p>User is not signed in.</p>
+}

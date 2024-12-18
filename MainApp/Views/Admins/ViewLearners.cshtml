@@ -1,0 +1,22 @@
+﻿@model IEnumerable<MainApp.Models.Learner>
+
+<h2>Learners</h2>
+<table>
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var learner in Model)
+        {
+            <tr>
+                <td>@learner.FirstName</td>
+                <td>@learner.LastName</td>
+                <td>@learner.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,22 @@
+﻿@model IEnumerable<MainApp.Models.Instructor>
+
+<h2>Instructors</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Expertise Area</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var instructor in Model)
+        {
+            <tr>
+                <td>@instructor.Name</td>
+                <td>@instructor.Email</td>
+                <td>@instructor.ExpertiseArea</td>
+            </tr>
+        }
+    </tbody>
+</table>

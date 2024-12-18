@@ -1,0 +1,152 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Input.Email">Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Input.Password">Password</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="Input.Role" class="form-control" id="roleSelect">
+                    <option value="">Select a role</option>
+                    <option value="Learner">Learner</option>
+                    <option value="Instructor">Instructor</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                <label asp-for="Input.Role">Role</label>
+                <span asp-validation-for="Input.Role" class="text-danger"></span>
+            </div>
+            <div id="learnerFields" style="display:none;">
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" />
+                    <label asp-for="Input.FirstName">First Name</label>
+                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" />
+                    <label asp-for="Input.LastName">Last Name</label>
+                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.BirthDate" class="form-control" type="date" placeholder="Birth Date" />
+                    <label asp-for="Input.BirthDate">Birth Date</label>
+                    <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Country" class="form-control" placeholder="Country" />
+                    <label asp-for="Input.Country">Country</label>
+                    <span asp-validation-for="Input.Country" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea asp-for="Input.CulturalBackground" class="form-control" placeholder="Cultural Background"></textarea>
+                    <label asp-for="Input.CulturalBackground">Cultural Background</label>
+                    <span asp-validation-for="Input.CulturalBackground" class="text-danger"></span>
+                </div>
+            </div>
+            <div id="instructorFields" style="display:none;">
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Name" class="form-control" placeholder="Name" />
+                    <label asp-for="Input.Name">Name</label>
+                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.LatestQualification" class="form-control" placeholder="Latest Qualification" />
+                    <label asp-for="Input.LatestQualification">Latest Qualification</label>
+                    <span asp-validation-for="Input.LatestQualification" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.ExpertiseArea" class="form-control" placeholder="Expertise Area" />
+                    <label asp-for="Input.ExpertiseArea">Expertise Area</label>
+                    <span asp-validation-for="Input.ExpertiseArea" class="text-danger"></span>
+                </div>
+            </div>
+            <div id="adminFields" style="display:none;">
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Name" class="form-control" placeholder="Name" />
+                    <label asp-for="Input.Name">Name</label>
+                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                </div>
+            </div>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </form>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h3>Use another service to register.</h3>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
+                            about setting up this ASP.NET application to support logging in via external services</a>.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('roleSelect').addEventListener('change', function () {
+            var learnerFields = document.getElementById('learnerFields');
+            var instructorFields = document.getElementById('instructorFields');
+            var adminFields = document.getElementById('adminFields');
+            if (this.value === 'Learner') {
+                learnerFields.style.display = 'block';
+                instructorFields.style.display = 'none';
+                adminFields.style.display = 'none';
+            } else if (this.value === 'Instructor') {
+                learnerFields.style.display = 'none';
+                instructorFields.style.display = 'block';
+                adminFields.style.display = 'none';
+            } else if (this.value === 'Admin') {
+                learnerFields.style.display = 'none';
+                instructorFields.style.display = 'none';
+                adminFields.style.display = 'block';
+            } else {
+                learnerFields.style.display = 'none';
+                instructorFields.style.display = 'none';
+                adminFields.style.display = 'none';
+            }
+        });
+    </script>
+}

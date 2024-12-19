@@ -52,8 +52,6 @@ namespace MainApp.Controllers
         }
 
         // POST: Instructors/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("InstructorId,Email,Name,ExpertiseArea,LatestQualification")] Instructor instructor)
@@ -86,8 +84,6 @@ namespace MainApp.Controllers
         }
 
         // POST: Instructors/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("InstructorId,Email,Name,ExpertiseArea,LatestQualification")] Instructor instructor)
@@ -149,9 +145,8 @@ namespace MainApp.Controllers
             if (instructor != null)
             {
                 _context.Instructors.Remove(instructor);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

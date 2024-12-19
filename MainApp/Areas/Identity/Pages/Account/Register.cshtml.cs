@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -18,8 +17,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using MainApp.Data; // Ensure this namespace is correct
-using MainApp.Models; // Ensure this namespace is correct
+using MainApp.Data;
+using MainApp.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MainApp.Areas.Identity.Pages.Account
 {
@@ -106,6 +106,9 @@ namespace MainApp.Areas.Identity.Pages.Account
 
             [Display(Name = "Expertise Area")]
             public string ExpertiseArea { get; set; }
+
+            [Display(Name = "Gender")]
+            public string Gender { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -149,14 +152,49 @@ namespace MainApp.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    // Save email, password hash, and role to Users table
                     var newUser = new Users
                     {
                         Email = Input.Email,
-                        PasswordHash = user.PasswordHash, // Set the PasswordHash property
+                        PasswordHash = user.PasswordHash,
                         Role = Input.Role
                     };
                     _context.Users.Add(newUser);
+                    await _context.SaveChangesAsync();
+
+                    if (Input.Role == "Admin")
+                    {
+                        var admin = new Admin
+                        {
+                            Email = newUser.Email,
+                            Name = Input.Name
+                        };
+                        _context.Admins.Add(admin);
+                    }
+                    else if (Input.Role == "Instructor")
+                    {
+                        var instructor = new Instructor
+                        {
+                            Email = newUser.Email,
+                            Name = Input.Name,
+                            LatestQualification = Input.LatestQualification,
+                            ExpertiseArea = Input.ExpertiseArea
+                        };
+                        _context.Instructors.Add(instructor);
+                    }
+                    else if (Input.Role == "Learner")
+                    {
+                        var learner = new Learner
+                        {
+                            Email = newUser.Email,
+                            FirstName = Input.FirstName,
+                            LastName = Input.LastName,
+                            BirthDate = Input.BirthDate,
+                            Country = Input.Country,
+                            CulturalBackground = Input.CulturalBackground,
+                            Gender = Input.Gender
+                        };
+                        _context.Learners.Add(learner);
+                    }
                     await _context.SaveChangesAsync();
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
@@ -175,7 +213,6 @@ namespace MainApp.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 

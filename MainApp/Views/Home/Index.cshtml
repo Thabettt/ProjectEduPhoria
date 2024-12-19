@@ -5,32 +5,84 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    string userRole = "Guest";
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        var roles = await UserManager.GetRolesAsync(user);
+        if (roles.Contains("Admin"))
+        {
+            userRole = "Admin";
+        }
+        else if (roles.Contains("Learner"))
+        {
+            userRole = "Learner";
+        }
+        else if (roles.Contains("Instructor"))
+        {
+            userRole = "Instructor";
+        }
+    }
 }
 
-<h1>Welcome to the Home Page</h1>
-
-@if (SignInManager.IsSignedIn(User))
+@if (userRole == "Guest")
 {
-    <p>User is signed in.</p>
-    var user = await UserManager.GetUserAsync(User);
-    var roles = await UserManager.GetRolesAsync(user);
-    if (roles.Contains("Admin"))
-    {
-        <p>User is in Admin role.</p>
-        <div class="manage-menu">
-            <h3>Manage</h3>
-            <ul>
-                <li><a href="@Url.Action("ViewInstructors", "Admins")">View Instructors</a></li>
-                <li><a href="@Url.Action("ViewLearners", "Admins")">View Learners</a></li>
-            </ul>
+    <div class="container mt-5">
+        <div class="jumbotron text-center p-5">
+            <h1 class="display-4 mb-4">Welcome to MainApp</h1>
+            <p class="lead mb-4">Your journey to knowledge starts here.</p>
+            <hr class="my-4">
+            <p class="mb-4">Sign up or log in to access our courses and resources.</p>
+            <a class="btn btn-primary btn-lg me-2" href="http://localhost:5111/Identity/Account/Register" role="button">Sign Up</a>
+            <a class="btn btn-secondary btn-lg" href="http://localhost:5111/Identity/Account/Login" role="button">Log In</a>
         </div>
-    }
-    else
-    {
-        <p>User is not in Admin role.</p>
-    }
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="~/images/feature1.jpg" class="card-img-top" alt="Feature 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Feature 1</h5>
+                        <p class="card-text">Description of feature 1.</p>
+                        <a href="#" class="btn btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="~/images/feature2.jpg" class="card-img-top" alt="Feature 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Feature 2</h5>
+                        <p class="card-text">Description of feature 2.</p>
+                        <a href="#" class="btn btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="~/images/feature3.jpg" class="card-img-top" alt="Feature 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Feature 3</h5>
+                        <p class="card-text">Description of feature 3.</p>
+                        <a href="#" class="btn btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    <p>User is not signed in.</p>
+    <div class="container mt-5">
+        <div class="jumbotron text-center p-5">
+            <h1 class="display-4 mb-4">Welcome to the Home Page</h1>
+            <p class="lead mb-4">@userRole is signed in.</p>
+            @if (userRole == "Admin")
+            {
+                <div class="mt-4">
+                    <a href="@Url.Action("Index", "Instructors")" class="btn btn-primary btn-lg me-2">View Instructors</a>
+                    <a href="@Url.Action("Index", "Learners")" class="btn btn-secondary btn-lg">View Learners</a>
+                </div>
+            }
+        </div>
+    </div>
 }
